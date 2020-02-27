@@ -4,9 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use Illuminate\Http\Request;
+use Illuminate\support\facades\Gate;
 
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function($request, $next){
+
+            if(Gate::allows('manage-categories'))return $next($request);
+            
+            abort(403, 'Anda tidak memiliki hak akses');
+        });
+    }
     /**
      * Display a listing of the resource.
      *

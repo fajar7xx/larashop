@@ -3,9 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
+    // otoritasi gate
+    public function __construct()
+    {
+        $this->middleware(function($request, $next){
+            if(Gate::allows('manage-users'))return $next($request);
+
+            abort(403, 'Anda tidak memiliki hak akses');
+        });
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -58,6 +69,19 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        // validasi user input
+        \Validator::make($request->all(), [
+            'name' => ['required', 'min:5', 'max:100'],
+            'username' => ['required', 'min:5', 'max:20', 'unique:users,username'],
+            'roles' => ['required'],
+            'phone' => ['required', 'digits_between:10,12'],
+            'address' => ['required', 'min:20', 'max:200'],
+            'avatar' => ['required'],
+            'email' => ['required', 'email', 'unique:users,email'],
+            'password' => ['required', 'min:6'],
+            'password_confirmation' => ['required', 'same:password']
+        ])->validate();
+
         // var_dump($_POST);
         $new_user = new \App\User;
 
@@ -78,7 +102,7 @@ class UserController extends Controller
 
         $new_user->save();
 
-        return redirect()->route('users.create')->with('status', 'User succesfuly created.');
+        return redirect()->route('users.index')->with('status', 'User succesfuly created.');
 
         // alternatifnya
         // return redirect('users/create')->with('status', 'User succesfully created');

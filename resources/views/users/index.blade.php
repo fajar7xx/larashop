@@ -11,20 +11,6 @@
         </div>
     @endif
 
-    {{-- daftar user disini --}}
-    {{-- <div class="row">
-        <div class="col-md-6">
-            <form action="{{route('users.index')}}">
-                <div class="input-group mb-3">
-                    <input type="text" name="keyword" value="{{Request::get('keyword')}}" class="form-control col-md-10" placeholder="Filter berdasarkan email">
-                    <div class="input-group-append">
-                        <input type="submit" value="Filter" class="btn btn-primary">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div> --}}
-
     <form action="{{route('users.index')}}">
         <div class="row">
             <div class="col-md-6">

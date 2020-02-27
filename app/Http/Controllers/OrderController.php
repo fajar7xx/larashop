@@ -3,10 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\facades\Gate;
 use App\Order;
 
 class OrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function($request, $next){
+            if(Gate::allows('manage-orders')) return $next($request);
+
+            abort(403, 'Anda tidak memiliki izin khusus');
+        });
+    }
     /**
      * Display a listing of the resource.
      *
